@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <div id="map" style="width: 100%; height: 600px;"></div>
+    <section class="float">
+        <h2>Attributes</h2>
+        <table>
+            <tbody>
+                <tr>
+                    <th>AIN</th>
+                    <td id="AIN_value"></td>
+                </tr>
+                <tr>
+                    <th>Situs Address</th>
+                    <td id="SitusAddress_value"></td>
+                </tr>
+                <tr>
+                    <th>Year Built</th>
+                    <td id="YearBuilt_value"></td>
+                </tr>
+                <tr>
+                    <th>Building Square Footage</th>
+                    <td id="BuildingSquareFootage_value"></td>
+                </tr>
+                <tr>
+                    <th>Building Height</th>
+                    <td id="BuildingHeight_value"></td>
+                </tr>
+                <tr>
+                    <th>Lot Square Footage</th>
+                    <td id="LotSquareFootage_value"></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    <section class="float">
+        <h3>Assumptions</h3>
+        <p id="Assumptions_value" style="border: 1px solid gray"></p>
+    </section>
+    <section class="float">
+        <h3>Impact</h3>
+        <div id="piechart"></div>
+    </section>
+    <hr style="clear: both" />
+    <section>
+        <h2>Layers</h2>
+        <div id="layerGroups"></div>
+    </section>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="//maps.googleapis.com/maps/api/js?libraries=geometry"></script>
+    <script src="//www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="map.js"></script>
+</body>
+</html>

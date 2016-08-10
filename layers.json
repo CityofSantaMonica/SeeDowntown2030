@@ -1,6 +1,6 @@
 [
   {
-    "potential": "SITES NOT CONSIDERED TO HAVE BUILDOUT POTENTIAL ",
+    "potential": "SITES NOT CONSIDERED TO HAVE BUILDOUT POTENTIAL",
     "area": "(60% of total Downtown Land Area)",
     "layers": [
       {
@@ -55,7 +55,7 @@
     ]
   },
   {
-    "potential": "SITES CONSIDERED TO HAVE UNLIKELY POTENTIAL FOR CHANGE ",
+    "potential": "SITES CONSIDERED TO HAVE UNLIKELY POTENTIAL FOR CHANGE",
     "area": "(20% of Total Downtown Land Area)",
     "layers": [
       {
@@ -89,7 +89,7 @@
     ]
   },
   {
-    "potential": "SITES CONSIDERED TO HAVE POTENTIAL FOR CHANGE ",
+    "potential": "SITES CONSIDERED TO HAVE POTENTIAL FOR CHANGE",
     "area": "(20% of Total Downtown Land Area)",
     "layers": [
       {

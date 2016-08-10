@@ -27,11 +27,13 @@ google.charts.setOnLoadCallback(function () {
                 var description = layer.description;
                 var source = layer.source;
                 var color = layer.color;
-                layers.push(loadLayer(path, color, groupCheckbox, groupCheckboxList, title, description, source));
+                layers.push(loadLayer(path, color, 0.75, "#FFFFFF", 0.1, groupCheckbox, groupCheckboxList, title, description, source, true));
+            }
+            if (group.potential === "SITES CONSIDERED TO HAVE POTENTIAL FOR CHANGE") {
+                loadLayer("https://cityofsantamonica.github.io/SeeDowntown2030/HistoricBuildings.geojson", "#FFFFFF", 0, "#FF0000", 1, groupCheckbox, groupCheckboxList, "Historic Buildings", "", "", false);
             }
         }
         loadParcelLayer("https://cityofsantamonica.github.io/SeeDowntown2030/Downtown.geojson", "#FFFFFF");
-        loadBuildingLayer("https://cityofsantamonica.github.io/SeeDowntown2030/HistoricBuildings.geojson", "#FF0000");
     });
 });
 
@@ -60,14 +62,13 @@ function createGroupCheckbox(layerContainerId, potential, area) {
     return checkbox;
 }
 
-function loadLayer(url, fillColor, groupCheckbox, groupList, title, description, sources) {
-    var layer = new google.maps.Data({map: map, style: {clickable: false, fillColor: fillColor, fillOpacity: 0.75, strokeColor: "#FFFFFF", strokeOpacity: 0.1, strokeWeight: 1, zIndex: -1}, title: title, color: fillColor, expanded: false});
+function loadLayer(url, fillColor, fillOpacity, strokeColor, strokeOpacity, groupCheckbox, groupList, title, description, sources, isParcel) {
+    var layer = new google.maps.Data({map: map, style: {clickable: false, fillColor: fillColor, fillOpacity: fillOpacity, strokeColor: strokeColor, strokeOpacity: strokeOpacity, strokeWeight: 1, zIndex: isParcel ? -1 : 0}, title: title, color: fillColor, expanded: false});
     var li = document.createElement("li");
     var checkbox = document.createElement("input");
     var swatch = document.createElement("div");
     var label = document.createElement("label");
     var labelText = document.createTextNode(title);
-
 
     layer.assumption_title = title;
     layer.assumption = description;
@@ -80,7 +81,7 @@ function loadLayer(url, fillColor, groupCheckbox, groupList, title, description,
     groupCheckbox.subCheckbox.push(checkbox);
     setGroupLayerCheckbox(groupCheckbox);
     swatch.style.backgroundColor = fillColor;
-    swatch.style.outline = "#000000 1px solid";
+    swatch.style.outline = strokeColor + " 1px solid";
     swatch.style.width = "1em";
     swatch.style.height = "1em";
     swatch.style.display = "inline-block";
@@ -100,27 +101,31 @@ function loadLayer(url, fillColor, groupCheckbox, groupList, title, description,
             layer.overrideStyle(feature, {visible: thisEvent.target.checked});
         });
         setGroupLayerCheckbox(groupCheckbox);
-        drawPieChart();
+        if (isParcel)
+            drawPieChart();
     });
     layer.loadGeoJson(url, null, function () {
-        var area = 0;
-        layer.forEach(function (feature) {
-            var geometry = feature.getGeometry();
-            switch (geometry.getType()) {
-                case "Polygon":
-                    area += google.maps.geometry.spherical.computeArea(geometry.getAt(0).getArray());
-                    break;
-                case "MultiPolygon":
-                    var instances = geometry.getArray();
-                    for (var instance in instances) {
-                        area += google.maps.geometry.spherical.computeArea(instances[instance].getAt(0).getArray());
-                    }
-                    break;
-            }
-        });
-        layer.area = area;
-        drawPieChart();
+        if (isParcel) {
+            var area = 0;
+            layer.forEach(function (feature) {
+                var geometry = feature.getGeometry();
+                switch (geometry.getType()) {
+                    case "Polygon":
+                        area += google.maps.geometry.spherical.computeArea(geometry.getAt(0).getArray());
+                        break;
+                    case "MultiPolygon":
+                        var instances = geometry.getArray();
+                        for (var instance in instances) {
+                            area += google.maps.geometry.spherical.computeArea(instances[instance].getAt(0).getArray());
+                        }
+                        break;
+                }
+            });
+            layer.area = area;
+            drawPieChart();
+        }
     });
+
     return layer;
 }
 
@@ -191,10 +196,6 @@ function loadParcelLayer(url, strokeColor) {
     return parcelLayer;
 }
 
-function loadBuildingLayer(url, strokeColor) {
-    buildinglLayer = new google.maps.Data({map: map, style: {clickable: false, fillOpacity: 0, strokeColor: strokeColor, strokeWeight: 1}});
-    buildinglLayer.loadGeoJson(url);
-}
 function drawPieChart() {
     var data = new google.visualization.DataTable();
     var slices = {};

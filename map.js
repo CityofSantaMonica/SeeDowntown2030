@@ -1,7 +1,7 @@
 /* global google */
 
 var mapConfig = {
-    center: new google.maps.LatLng(34.016615, -118.492978),
+    center: new google.maps.LatLng(34.0158384, -118.492639), 
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     zoom: 16
 };

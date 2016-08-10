@@ -13,7 +13,7 @@ google.charts.load('current', {'packages': ['corechart']});
 
 google.charts.setOnLoadCallback(function () {
     map = new google.maps.Map(document.getElementById("map"), mapConfig);
-    $.getJSON("layers.json", function (data) {
+    $.getJSON("https://cityofsantamonica.github.io/SeeDowntown2030/layers.json", function (data) {
         for (var i = 0; i < data.length; i++) {
             var group = data[i];
             var potential = group.potential;
@@ -30,8 +30,8 @@ google.charts.setOnLoadCallback(function () {
                 layers.push(loadLayer(path, color, groupCheckbox, groupCheckboxList, title, description, source));
             }
         }
-        loadParcelLayer("Downtown.geojson", "#FFFFFF");
-        loadBuildingLayer("HistoricBuildings.geojson", "#FF0000");
+        loadParcelLayer("https://cityofsantamonica.github.io/SeeDowntown2030/Downtown.geojson", "#FFFFFF");
+        loadBuildingLayer("https://cityofsantamonica.github.io/SeeDowntown2030/HistoricBuildings.geojson", "#FF0000");
     });
 });
 

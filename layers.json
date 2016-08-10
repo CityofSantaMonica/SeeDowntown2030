@@ -4,49 +4,49 @@
     "area": "(60% of total Downtown Land Area)",
     "layers": [
       {
-        "path": "NoPotential/NLM.geojson",
+        "path": "https://cityofsantamonica.github.io/SeeDowntown2030/NoPotential/NLM.geojson",
         "title": "Properties Containing Landmark Structures",
         "description": "Sites containing designated City Landmarks are unlikely to change due to protections provided by Landmark designation.",
         "source": "Planning Department",
         "color": "#004c73"
       },
       {
-        "path": "NoPotential/OFAR.geojson",
+        "path": "https://cityofsantamonica.github.io/SeeDowntown2030/NoPotential/OFAR.geojson",
         "title": "Properties with Buildings that Exceed Current or Proposed Height and Floor Area Ratio Limits",
         "description": "Some parcels contain existing buildings that exceed current or proposed zoning standards for height and floor area ratio. These parcels are not anticipated to change.",
         "source": "Assessor’s Office, Field Study",
         "color": "#446589"
       },
       {
-        "path": "NoPotential/NW.geojson",
+        "path": "https://cityofsantamonica.github.io/SeeDowntown2030/NoPotential/NW.geojson",
         "title": "Places of Worship and Institutional Properties",
         "description": "Downtown contains a handful of church-owned properties that are unlikely to change. Similarly, some institutional entities, such as the Salvation Army, are unlikely to change.",
         "source": "Assessor’s Office, Field Study",
         "color": "#0084a8"
       },
       {
-        "path": "NoPotential/N90.geojson",
+        "path": "https://cityofsantamonica.github.io/SeeDowntown2030/NoPotential/N90.geojson",
         "title": "Properties Developed or Significantly Redeveloped Since 1990 ",
         "description": "Parcels that have experienced new development or significant investment in improvements within the past 25 years are not likely to experience substantial additive change.",
         "source": "Assessor’s Office, City GIS, Field Study",
         "color": "#00a9e6"
       },
       {
-        "path": "NoPotential/G.geojson",
+        "path": "https://cityofsantamonica.github.io/SeeDowntown2030/NoPotential/G.geojson",
         "title": "Government-Owned Properties",
         "description": "City- and State-owned properties such as most Downtown parking garages, and the Big Blue Bus site, are not likely to experience development as they provide valuable services to the community. ",
         "source": "Assessor’s Office, City GIS",
         "color": "#00c5ff"
       },
       {
-        "path": "NoPotential/U.geojson",
+        "path": "https://cityofsantamonica.github.io/SeeDowntown2030/NoPotential/U.geojson",
         "title": "Utility-Owned Properties",
         "description": "Utility owned parcels, such as the Edison sub-station at Lincoln and Colorado are unlikely to change.",
         "source": "Assessor’s Office, City GIS",
         "color": "#73dfff"
       },
       {
-        "path": "NoPotential/HRI.geojson",
+        "path": "https://cityofsantamonica.github.io/SeeDowntown2030/NoPotential/HRI.geojson",
         "title": "Properties Containing Structures Identified on the Historic Resources Inventory",
         "description": "Many sites containing buildings on the HRI are unlikely to change due to protections included in the DCP and/or their value as unique commercial properties.",
         "source": "Planning Department",
@@ -59,28 +59,28 @@
     "area": "(20% of Total Downtown Land Area)",
     "layers": [
       {
-        "path": "LimitedPotential/LF.geojson",
+        "path": "https://cityofsantamonica.github.io/SeeDowntown2030/LimitedPotential/LF.geojson",
         "title": "Properties with Limited Future Development Potential",
         "description": "Sites that contain existing buildings with a FAR that is equal to 75% of the DCP’s proposed FARs are considered to have limited development potential.",
         "source": "Assessor’s Office",
         "color": "#267300"
       },
       {
-        "path": "LimitedPotential/LS.geojson",
+        "path": "https://cityofsantamonica.github.io/SeeDowntown2030/LimitedPotential/LS.geojson",
         "title": "Single Lot Properties under Sole Ownership",
         "description": "The development of single 7500 SF parcels is challenging in the Downtown due to parking and other on-site requirements. While some exceptions are likely to exist, by and large it is not anticipated that the majority of single lot parcels under single ownership will significantly change.",
         "source": "Assessor’s Office",
         "color": "#4ce600"
       },
       {
-        "path": "LimitedPotential/LC.geojson",
+        "path": "https://cityofsantamonica.github.io/SeeDowntown2030/LimitedPotential/LC.geojson",
         "title": "Commercial Office Properties",
         "description": "Commercial office is increasingly scarce in Santa Monica. The assumption is that most existing commercial office is not likely to change.",
         "source": "Field Study, Assessor’s Office",
         "color": "#aaff00"
       },
       {
-        "path": "LimitedPotential/LV.geojson",
+        "path": "https://cityofsantamonica.github.io/SeeDowntown2030/LimitedPotential/LV.geojson",
         "title": "Properties with High Improvement/Land value ratio",
         "description": "Sites that have an existing improved value that is 51% or greater of the overall assessed value of the site are not likely to change.",
         "source": "Assessor’s Office",
@@ -93,28 +93,28 @@
     "area": "(20% of Total Downtown Land Area)",
     "layers": [
       {
-        "path": "Potential/PE.geojson",
+        "path": "https://cityofsantamonica.github.io/SeeDowntown2030/Potential/PE.geojson",
         "title": "Pipeline Projects (Entitled)",
         "description": "Projects that have received entitlements since 2013.",
         "source": "Planning Department",
         "color": "#e6a817"
       },
       {
-        "path": "Potential/PP.geojson",
+        "path": "https://cityofsantamonica.github.io/SeeDowntown2030/Potential/PP.geojson",
         "title": "Pipeline Projects (Proposed)",
         "description": "Projects that are currently proposed but have yet to receive entitlements.",
         "source": "Planning Department",
         "color": "#ffd700"
       },
       {
-        "path": "Potential/PFAR.geojson",
+        "path": "https://cityofsantamonica.github.io/SeeDowntown2030/Potential/PFAR.geojson",
         "title": "Properties with at least 2.0 FAR remaining within proposed building envelope",
         "description": "Sites that could achieve an increase in FAR of 2.0 or more over existing conditions through redevelopment or the addition of new square feet .",
         "source": "Assessor’s Office, Proposed Zoning Regulations",
         "color": "#e6e600"
       },
       {
-        "path": "Potential/PV.geojson",
+        "path": "https://cityofsantamonica.github.io/SeeDowntown2030/Potential/PV.geojson",
         "title": "Properties that have low improvement/land value ratio",
         "description": "Sites that have an existing improved value that is 50% or less than the overall assessed value of the site.",
         "source": "Assessor’s office",

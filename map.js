@@ -1,45 +1,44 @@
-/// <reference path="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js" />
-// <reference path="//maps.googleapis.com/maps/api/js" />
+/* global google */
 
 var mapConfig = {
     center: new google.maps.LatLng(34.016615, -118.492978),
     mapTypeId: google.maps.MapTypeId.ROADMAP,
-    //scrollwheel: false,
-    zoom: 16,
+    zoom: 16
 };
 
 var layers = [];
 var map;
 
-google.charts.load('current', { 'packages': ['corechart'] });
+google.charts.load('current', {'packages': ['corechart']});
 
 google.charts.setOnLoadCallback(function () {
     map = new google.maps.Map(document.getElementById("map"), mapConfig);
     $.getJSON("layers.json", function (data) {
-        $.each(data, function (i) {
+        for (var i = 0; i < data.length; i++) {
             var group = data[i];
             var potential = group.potential;
             var area = group.area;
             var groupCheckbox = createGroupCheckbox("layerGroups", potential, area);
             var groupCheckboxList = groupCheckbox.parentElement.nextSibling;
-            $.each(group.layers, function (j) {
+            for (var j = 0; j < group.layers.length; j++) {
                 var layer = group.layers[j];
                 var path = layer.path;
                 var title = layer.title;
                 var description = layer.description;
+                var source = layer.source;
                 var color = layer.color;
-                layers.push(loadLayer(path, color, groupCheckbox, groupCheckboxList, title, description))
-            });
-        });
-        var parcels = loadParcelLayer("Downtown.geojson", "#FFFFFF");
-        var buildings = loadBuildingLayer("HistoricBuildings.geojson", "#FF0000");
+                layers.push(loadLayer(path, color, groupCheckbox, groupCheckboxList, title, description, source));
+            }
+        }
+        loadParcelLayer("Downtown.geojson", "#FFFFFF");
+        loadBuildingLayer("HistoricBuildings.geojson", "#FF0000");
     });
 });
 
 function createGroupCheckbox(layerContainerId, potential, area) {
     var layerContainer = document.getElementById(layerContainerId);
     var header = document.createElement("h3");
-    var headerText = document.createTextNode(potential)
+    var headerText = document.createTextNode(potential);
     var checkbox = document.createElement("input");
     var list = document.createElement("ul");
     header.appendChild(headerText);
@@ -60,22 +59,24 @@ function createGroupCheckbox(layerContainerId, potential, area) {
     layerContainer.appendChild(list);
     return checkbox;
 }
-function loadLayer(url, fillColor, groupCheckbox, groupList, labelValue, assumption) {
-    var layer = new google.maps.Data({ map: map, style: { clickable: false, fillColor: fillColor, fillOpacity: 0.75, strokeColor: "#FFFFFF", strokeOpacity: 0.1, strokeWeight: 1, zIndex: -1 }, title: labelValue, color: fillColor, expanded: false });
+
+function loadLayer(url, fillColor, groupCheckbox, groupList, title, description, sources) {
+    var layer = new google.maps.Data({map: map, style: {clickable: false, fillColor: fillColor, fillOpacity: 0.75, strokeColor: "#FFFFFF", strokeOpacity: 0.1, strokeWeight: 1, zIndex: -1}, title: title, color: fillColor, expanded: false});
     var li = document.createElement("li");
     var checkbox = document.createElement("input");
     var swatch = document.createElement("div");
     var label = document.createElement("label");
-    var labelText = document.createTextNode(labelValue);
-    var table = document.createElement("table");
-    var tbody = document.createElement("tbody");
+    var labelText = document.createTextNode(title);
 
-    layer.assumption = assumption
+
+    layer.assumption_title = title;
+    layer.assumption = description;
+    layer.assumption_sources = sources;
     groupList.appendChild(li);
     checkbox.type = "checkbox";
     checkbox.checked = true;
     layer.checkbox = checkbox;
-    li.appendChild(checkbox)
+    li.appendChild(checkbox);
     groupCheckbox.subCheckbox.push(checkbox);
     setGroupLayerCheckbox(groupCheckbox);
     swatch.style.backgroundColor = fillColor;
@@ -90,13 +91,13 @@ function loadLayer(url, fillColor, groupCheckbox, groupList, labelValue, assumpt
     label.appendChild(swatch);
     label.appendChild(labelText);
     label.style.cursor = "pointer";
-    //label.innerText = labelValue;
+    //label.innerText = title;
     //label.insertChild(swatch);
     li.appendChild(label);
 
     checkbox.addEventListener("change", function (thisEvent) {
         layer.forEach(function (feature) {
-            layer.overrideStyle(feature, { visible: thisEvent.target.checked });
+            layer.overrideStyle(feature, {visible: thisEvent.target.checked});
         });
         setGroupLayerCheckbox(groupCheckbox);
         drawPieChart();
@@ -124,31 +125,38 @@ function loadLayer(url, fillColor, groupCheckbox, groupList, labelValue, assumpt
 }
 
 function loadParcelLayer(url, strokeColor) {
-    var assumption = "";
-    parcelLayer = new google.maps.Data({ map: map, style: { clickable: true, fillOpacity: 0, strokeColor: strokeColor, strokeWeight: 1 } });
+    var assumption_title = "";
+    var assumption_description = "";
+    var assumption_sources = "";
+    var parcelLayer = new google.maps.Data({map: map, style: {clickable: true, fillOpacity: 0, strokeColor: strokeColor, strokeWeight: 1}});
     parcelLayer.addListener('click', function (thisEvent) {
         var latLng = thisEvent.latLng;
         var lat = latLng.lat();
         var lng = latLng.lng();
-        for(var layer of layers) {
+        for (var i = 0; i < layers.length; i++) {
+            var layer = layers[i];
             layer.expanded = false;
             layer.forEach(function (feature) {
                 var geometry = feature.getGeometry();
                 switch (geometry.getType()) {
                     case "Polygon":
-                        var polygon = new google.maps.Polygon({ path: geometry.getAt(0).getArray() });
+                        var polygon = new google.maps.Polygon({path: geometry.getAt(0).getArray()});
                         if (google.maps.geometry.poly.containsLocation(latLng, polygon)) {
                             layer.expanded = true;
-                            assumption = layer.assumption;
+                            assumption_title = layer.assumption_title;
+                            assumption_description = layer.assumption;
+                            assumption_sources = layer.assumption_sources;
                         }
                         break;
                     case "MultiPolygon":
                         var instances = geometry.getArray();
                         for (var instance in instances) {
-                            var polygon = new google.maps.Polygon({ path: instances[instance].getAt(0).getArray() });
+                            var polygon = new google.maps.Polygon({path: instances[instance].getAt(0).getArray()});
                             if (google.maps.geometry.poly.containsLocation(latLng, polygon)) {
                                 layer.expanded = true;
-                                assumption = layer.assumption;
+                                assumption_title = layer.assumption_title;
+                                assumption_description = layer.assumption;
+                                assumption_sources = layer.assumption_sources;
                             }
                         }
                         break;
@@ -156,10 +164,9 @@ function loadParcelLayer(url, strokeColor) {
             });
         }
         parcelLayer.forEach(function (feature) {
-            if (feature == thisEvent.feature) {
-                parcelLayer.overrideStyle(feature, { strokeColor: "#FF0000", strokeWeight: 2 })
-            }
-            else {
+            if (feature === thisEvent.feature) {
+                parcelLayer.overrideStyle(feature, {strokeColor: "#FF0000", strokeWeight: 2});
+            } else {
                 parcelLayer.revertStyle(feature);
             }
         });
@@ -175,22 +182,17 @@ function loadParcelLayer(url, strokeColor) {
         document.getElementById("BuildingSquareFootage_value").innerText = BuildingSquareFootage;
         document.getElementById("BuildingHeight_value").innerText = BuildingHeight;
         document.getElementById("LotSquareFootage_value").innerText = LotSquareFootage;
-        //if (layerParcelAssumptions[AIN] !== undefined) {
-        //    var assumption = layerParcelAssumptions[AIN];
-        //    document.getElementById("Assumptions_value").innerText = assumption;
-        //}
-        //else {
-        //    document.getElementById("Assumptions_value").innerText = "";
-        //}
-        document.getElementById("Assumptions_value").innerText = assumption;
+        document.getElementById("Assumption_title").innerText = assumption_title;
+        document.getElementById("Assumption_description").innerText = assumption_description;
+        document.getElementById("Assumption_sources").innerText = assumption_sources;
         drawPieChart();
     });
     parcelLayer.loadGeoJson(url);
     return parcelLayer;
 }
 
-function loadBuildingLayer(url, strokeColor){
-    buildinglLayer = new google.maps.Data({ map: map, style: { clickable: false, fillOpacity: 0, strokeColor: strokeColor, strokeWeight: 1 } });
+function loadBuildingLayer(url, strokeColor) {
+    buildinglLayer = new google.maps.Data({map: map, style: {clickable: false, fillOpacity: 0, strokeColor: strokeColor, strokeWeight: 1}});
     buildinglLayer.loadGeoJson(url);
 }
 function drawPieChart() {
@@ -198,20 +200,20 @@ function drawPieChart() {
     var slices = {};
     data.addColumn("string", "Name");
     data.addColumn("number", "Area");
-    for (index = 0; index < layers.length; index++) {
-        var layer = layers[index];
-        if (layer.area == undefined) {
+    for (i = 0; i < layers.length; i++) {
+        var layer = layers[i];
+        if (layer.area === undefined) {
             return;
         }
         data.addRow([layer.title, layer.area]);
-        slices[index] = { color: layer.checkbox.checked ? layer.color : "transparent", offset: layers[index].expanded ? 0.2 : 0 };
+        slices[i] = {color: layer.checkbox.checked ? layer.color : "transparent", offset: layer.expanded ? 0.2 : 0};
     }
     var options = {
-        chartArea: { height: "80%", width: "80%" },
-        legend: { position: "none" },
+        chartArea: {height: "80%", width: "80%"},
+        legend: {position: "none"},
         pieSliceText: "percentage",
         slices: slices,
-        tooltip: { text: "percentage" },
+        tooltip: {text: "percentage"},
         height: 300
     };
     chart = new google.visualization.PieChart(document.getElementById('piechart'));

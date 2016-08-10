@@ -28,7 +28,7 @@ google.charts.setOnLoadCallback(function () {
                 var title = layer.title;
                 var description = layer.description;
                 var color = layer.color;
-                layers.push(loadLayer(path, color, groupCheckbox, groupCheckboxList, title))
+                layers.push(loadLayer(path, color, groupCheckbox, groupCheckboxList, title, description))
             });
         });
         var parcels = loadParcelLayer("Downtown.geojson", "#FFFFFF");
@@ -59,7 +59,7 @@ function createGroupCheckbox(layerContainerId, potential, area) {
     layerContainer.appendChild(list);
     return checkbox;
 }
-function loadLayer(url, fillColor, groupCheckbox, groupList, labelValue) {
+function loadLayer(url, fillColor, groupCheckbox, groupList, labelValue, assumption) {
     var layer = new google.maps.Data({ map: map, style: { clickable: false, fillColor: fillColor, fillOpacity: 0.75, strokeColor: "#FFFFFF", strokeOpacity: 0.1, strokeWeight: 1, zIndex: -1 }, title: labelValue, color: fillColor, expanded: false });
     var li = document.createElement("li");
     var checkbox = document.createElement("input");
@@ -69,6 +69,7 @@ function loadLayer(url, fillColor, groupCheckbox, groupList, labelValue) {
     var table = document.createElement("table");
     var tbody = document.createElement("tbody");
 
+    layer.assumption = assumption
     groupList.appendChild(li);
     checkbox.type = "checkbox";
     checkbox.checked = true;
@@ -91,27 +92,6 @@ function loadLayer(url, fillColor, groupCheckbox, groupList, labelValue) {
     //label.innerText = labelValue;
     //label.insertChild(swatch);
     li.appendChild(label);
-    //if (assumptions !== undefined) {
-    //    for (var index = 0; index < assumptions.length; index++) {
-    //        var assumption = assumptions[index];
-    //        var row = document.createElement("tr");
-    //        var titleCol = document.createElement("th");
-    //        var descriptionCol = document.createElement("td");
-    //        titleCol.innerText = assumption.title;
-    //        titleCol.setAttribute("style", "margin: 0; padding: 5px; text-indent: 0; vertical-align: top; width: 25%");
-    //        descriptionCol.innerText = assumption.description;
-    //        descriptionCol.setAttribute("style", "margin: 0; padding: 5px; text-indent: 0; vertical-align: top; width: 50%");
-    //        row.appendChild(titleCol);
-    //        row.appendChild(descriptionCol);
-    //        tbody.appendChild(row);
-    //    }
-    //    //table.setAttribute("border", "1");
-    //    table.setAttribute("style", "margin-left: 10%; width: 80%");
-    //    table.appendChild(tbody);
-    //    li.appendChild(table);
-    //}
-
-
 
     checkbox.addEventListener("change", function (thisEvent) {
         layer.forEach(function (feature) {
@@ -143,8 +123,9 @@ function loadLayer(url, fillColor, groupCheckbox, groupList, labelValue) {
 }
 
 function loadParcelLayer(url, strokeColor) {
-    layer = new google.maps.Data({ map: map, style: { clickable: true, fillOpacity: 0, strokeColor: strokeColor, strokeWeight: 1 } });
-    layer.addListener('click', function (thisEvent) {
+    var assumption = "";
+    parcelLayer = new google.maps.Data({ map: map, style: { clickable: true, fillOpacity: 0, strokeColor: strokeColor, strokeWeight: 1 } });
+    parcelLayer.addListener('click', function (thisEvent) {
         var latLng = thisEvent.latLng;
         var lat = latLng.lat();
         var lng = latLng.lng();
@@ -157,6 +138,7 @@ function loadParcelLayer(url, strokeColor) {
                         var polygon = new google.maps.Polygon({ path: geometry.getAt(0).getArray() });
                         if (google.maps.geometry.poly.containsLocation(latLng, polygon)) {
                             layer.expanded = true;
+                            assumption = layer.assumption;
                         }
                         break;
                     case "MultiPolygon":
@@ -165,18 +147,19 @@ function loadParcelLayer(url, strokeColor) {
                             var polygon = new google.maps.Polygon({ path: instances[instance].getAt(0).getArray() });
                             if (google.maps.geometry.poly.containsLocation(latLng, polygon)) {
                                 layer.expanded = true;
+                                assumption = layer.assumption;
                             }
                         }
                         break;
                 }
             });
         }
-        layer.forEach(function (feature) {
+        parcelLayer.forEach(function (feature) {
             if (feature == thisEvent.feature) {
-                layer.overrideStyle(feature, { strokeColor: "#FF0000", strokeWeight: 2 })
+                parcelLayer.overrideStyle(feature, { strokeColor: "#FF0000", strokeWeight: 2 })
             }
             else {
-                layer.revertStyle(feature);
+                parcelLayer.revertStyle(feature);
             }
         });
         var AIN = thisEvent.feature.getProperty("AIN");
@@ -198,10 +181,11 @@ function loadParcelLayer(url, strokeColor) {
         //else {
         //    document.getElementById("Assumptions_value").innerText = "";
         //}
+        document.getElementById("Assumptions_value").innerText = assumption;
         drawPieChart();
     });
-    layer.loadGeoJson(url);
-    return layer;
+    parcelLayer.loadGeoJson(url);
+    return parcelLayer;
 }
 
 function drawPieChart() {

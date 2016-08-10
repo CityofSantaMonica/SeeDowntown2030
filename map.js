@@ -32,6 +32,7 @@ google.charts.setOnLoadCallback(function () {
             });
         });
         var parcels = loadParcelLayer("Downtown.geojson", "#FFFFFF");
+        var buildings = loadBuildingLayer("HistoricBuildings.geojson", "#FF0000");
     });
 });
 
@@ -188,6 +189,10 @@ function loadParcelLayer(url, strokeColor) {
     return parcelLayer;
 }
 
+function loadBuildingLayer(url, strokeColor){
+    buildinglLayer = new google.maps.Data({ map: map, style: { clickable: false, fillOpacity: 0, strokeColor: strokeColor, strokeWeight: 1 } });
+    buildinglLayer.loadGeoJson(url);
+}
 function drawPieChart() {
     var data = new google.visualization.DataTable();
     var slices = {};

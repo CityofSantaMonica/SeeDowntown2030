@@ -73,11 +73,13 @@ function loadPotentialLayer(url, fillColor, fillOpacity, strokeColor, strokeOpac
     potentialLayer.assumption_title = title;
     potentialLayer.assumption = description;
     potentialLayer.assumption_sources = sources;
+    groupList.style.webkitPaddingStart = "0";
     groupList.appendChild(li);
     checkbox.type = "checkbox";
     checkbox.checked = true;
     potentialLayer.checkbox = checkbox;
     li.style.listStyleType = "none";
+    li.style.marginLeft = "2em";
     li.appendChild(checkbox);
     groupCheckbox.subCheckbox.push(checkbox);
     setGroupLayerCheckbox(groupCheckbox);

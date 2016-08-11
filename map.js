@@ -233,6 +233,7 @@ function drawPieChart() {
     var options = {
         chartArea: {height: "80%", width: "80%"},
         legend: {position: "none"},
+        pieSliceBorderColor: "lightgray",
         pieSliceText: "percentage",
         slices: slices,
         tooltip: {text: "percentage"},

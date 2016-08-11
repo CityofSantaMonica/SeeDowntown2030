@@ -5,18 +5,24 @@ var mapConfig = {
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     zoom: 16,
     styles: [
-  {
-    "featureType": "poi",
-    "stylers": [
-      { "visibility": "off" }
+        {
+            "featureType": "administrative",
+            "stylers": [
+                {"visibility": "off"}
+            ]
+        }, {
+            "featureType": "poi",
+            "stylers": [
+                {"visibility": "off"}
+            ]
+        }, {
+            "featureType": "road.highway",
+            "stylers": [
+                {"saturation": -100},
+                {"lightness": 24}
+            ]
+        }
     ]
-  },{
-    "featureType": "administrative",
-    "stylers": [
-      { "visibility": "off" }
-    ]
-  }
-]
 };
 
 var potentialLayers = [];

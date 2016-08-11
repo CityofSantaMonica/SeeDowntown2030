@@ -109,7 +109,7 @@
       {
         "path": "https://cityofsantamonica.github.io/SeeDowntown2030/Potential/PFAR.geojson",
         "title": "Properties with at least 2.0 FAR remaining within proposed building envelope",
-        "description": "Sites that could achieve an increase in FAR of 2.0 or more over existing conditions through redevelopment or the addition of new square feet .",
+        "description": "Sites that could achieve an increase in FAR of 2.0 or more over existing conditions through redevelopment or the addition of new square feet.",
         "source": "Assessor’s Office, Proposed Zoning Regulations",
         "color": "#e6e600"
       },

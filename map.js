@@ -6,25 +6,19 @@ var mapConfig = {
     zoom: 16,
     styles: [
         {
-            "featureType": "administrative",
-            "stylers": [
-                {"visibility": "off"}
-            ]
-        }, {
-            "featureType": "poi",
-            "stylers": [
-                {"visibility": "off"}
-            ]
-        }, {
-            "featureType": "road.highway",
             "stylers": [
                 {"saturation": -100},
-                {"lightness": 24}
+                {"visibility": "off"}
             ]
         }, {
-            "featureType": "transit",
+            "featureType": "road",
             "stylers": [
-                {"visibility": "off"}
+                {"visibility": "on"}
+            ]
+        }, {
+            "featureType": "landscape.natural",
+            "stylers": [
+                {"visibility": "on"}
             ]
         }
     ]

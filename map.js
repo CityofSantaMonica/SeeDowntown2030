@@ -21,6 +21,11 @@ var mapConfig = {
                 {"saturation": -100},
                 {"lightness": 24}
             ]
+        }, {
+            "featureType": "transit",
+            "stylers": [
+                {"visibility": "off"}
+            ]
         }
     ]
 };

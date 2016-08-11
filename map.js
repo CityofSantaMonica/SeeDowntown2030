@@ -3,7 +3,20 @@
 var mapConfig = {
     center: new google.maps.LatLng(34.0158384, -118.492639),
     mapTypeId: google.maps.MapTypeId.ROADMAP,
-    zoom: 16
+    zoom: 16,
+    styles: [
+  {
+    "featureType": "poi",
+    "stylers": [
+      { "visibility": "off" }
+    ]
+  },{
+    "featureType": "administrative",
+    "stylers": [
+      { "visibility": "off" }
+    ]
+  }
+]
 };
 
 var potentialLayers = [];

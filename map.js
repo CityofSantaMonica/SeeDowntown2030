@@ -1,7 +1,7 @@
 /* global google */
 
 var mapConfig = {
-    center: new google.maps.LatLng(34.0158384, -118.492639), 
+    center: new google.maps.LatLng(34.0158384, -118.492639),
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     zoom: 16
 };
@@ -77,6 +77,7 @@ function loadPotentialLayer(url, fillColor, fillOpacity, strokeColor, strokeOpac
     checkbox.type = "checkbox";
     checkbox.checked = true;
     potentialLayer.checkbox = checkbox;
+    li.style.listStyleType = "none";
     li.appendChild(checkbox);
     groupCheckbox.subCheckbox.push(checkbox);
     setGroupLayerCheckbox(groupCheckbox);

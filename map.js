@@ -69,10 +69,16 @@ function createGroupCheckbox(layerContainerId, potential, area) {
     header.insertBefore(checkbox, header.firstChild);
     checkbox.addEventListener("change", function (thisEvent) {
         for (var index = 0; index < thisEvent.target.subCheckbox.length; index++) {
-            thisEvent.target.subCheckbox[index].checked = thisEvent.target.checked;
+            var checkbox = thisEvent.target.subCheckbox[index];
+            if (!checkbox.disabled) {
+                checkbox.checked = thisEvent.target.checked;
+            }
         }
         for (var index = 0; index < thisEvent.target.subCheckbox.length; index++) {
-            thisEvent.target.subCheckbox[index].dispatchEvent(new Event("change"));
+            var checkbox = thisEvent.target.subCheckbox[index];
+            if (!checkbox.disabled) {
+                checkbox.dispatchEvent(new Event("change"));
+            }
         }
         drawPieChart();
     });
@@ -151,67 +157,77 @@ function loadPotentialLayer(url, fillColor, fillOpacity, strokeColor, strokeOpac
 }
 
 function loadParcelLayer(url, strokeColor) {
-    var assumption_title = "";
-    var assumption_description = "";
-    var assumption_sources = "";
     var parcelLayer = new google.maps.Data({map: map, style: {clickable: true, fillOpacity: 0, strokeColor: strokeColor, strokeWeight: 1}});
     parcelLayer.addListener('click', function (thisEvent) {
+        var newFeature = false;
+        var assumption_title = "";
+        var assumption_description = "";
+        var assumption_sources = "";
         var latLng = thisEvent.latLng;
         var lat = latLng.lat();
         var lng = latLng.lng();
         for (var i = 0; i < potentialLayers.length; i++) {
             var potentialLayer = potentialLayers[i];
-            potentialLayer.expanded = false;
-            potentialLayer.forEach(function (feature) {
-                var geometry = feature.getGeometry();
-                switch (geometry.getType()) {
-                    case "Polygon":
-                        var polygon = new google.maps.Polygon({path: geometry.getAt(0).getArray()});
-                        if (google.maps.geometry.poly.containsLocation(latLng, polygon)) {
-                            potentialLayer.expanded = true;
-                            assumption_title = potentialLayer.assumption_title;
-                            assumption_description = potentialLayer.assumption;
-                            assumption_sources = potentialLayer.assumption_sources;
-                        }
-                        break;
-                    case "MultiPolygon":
-                        var instances = geometry.getArray();
-                        for (var instance in instances) {
-                            var polygon = new google.maps.Polygon({path: instances[instance].getAt(0).getArray()});
+            if (potentialLayer.checkbox.checked) {
+                potentialLayer.forEach(function (feature) {
+                    var geometry = feature.getGeometry();
+                    switch (geometry.getType()) {
+                        case "Polygon":
+                            var polygon = new google.maps.Polygon({path: geometry.getAt(0).getArray()});
                             if (google.maps.geometry.poly.containsLocation(latLng, polygon)) {
-                                potentialLayer.expanded = true;
+                                newFeature = true;
                                 assumption_title = potentialLayer.assumption_title;
                                 assumption_description = potentialLayer.assumption;
                                 assumption_sources = potentialLayer.assumption_sources;
                             }
-                        }
-                        break;
+                            break;
+                        case "MultiPolygon":
+                            var instances = geometry.getArray();
+                            for (var instance in instances) {
+                                var polygon = new google.maps.Polygon({path: instances[instance].getAt(0).getArray()});
+                                if (google.maps.geometry.poly.containsLocation(latLng, polygon)) {
+                                    newFeature = true;
+                                    assumption_title = potentialLayer.assumption_title;
+                                    assumption_description = potentialLayer.assumption;
+                                    assumption_sources = potentialLayer.assumption_sources;
+                                }
+                            }
+                            break;
+                    }
+                });
+            }
+        }
+        if (newFeature) {
+            for (var i = 0; i < potentialLayers.length; i++) {
+                var potentialLayer = potentialLayers[i];
+                var isSelected = (potentialLayer.assumption_title === assumption_title);
+                potentialLayer.expanded = isSelected;
+                potentialLayer.checkbox.disabled = isSelected;
+            }
+            parcelLayer.forEach(function (feature) {
+                if (feature === thisEvent.feature) {
+                    parcelLayer.overrideStyle(feature, {strokeColor: "#FF0000", strokeWeight: 2});
+                } else {
+                    parcelLayer.revertStyle(feature);
                 }
             });
+            var AIN = thisEvent.feature.getProperty("AIN");
+            var SitusAddress = thisEvent.feature.getProperty("Situs Address");
+            var YearBuilt = thisEvent.feature.getProperty("Year Built");
+            var BuildingSquareFootage = thisEvent.feature.getProperty("Building Square Footage");
+            var BuildingHeight = thisEvent.feature.getProperty("Building Height");
+            var LotSquareFootage = thisEvent.feature.getProperty("Lot Square Footage");
+            document.getElementById("AIN_value").innerText = AIN;
+            document.getElementById("SitusAddress_value").innerText = SitusAddress;
+            document.getElementById("YearBuilt_value").innerText = YearBuilt;
+            document.getElementById("BuildingSquareFootage_value").innerText = BuildingSquareFootage;
+            document.getElementById("BuildingHeight_value").innerText = BuildingHeight;
+            document.getElementById("LotSquareFootage_value").innerText = LotSquareFootage;
+            document.getElementById("Assumption_title").innerText = assumption_title;
+            document.getElementById("Assumption_description").innerText = assumption_description;
+            document.getElementById("Assumption_sources").innerText = assumption_sources;
+            drawPieChart();
         }
-        parcelLayer.forEach(function (feature) {
-            if (feature === thisEvent.feature) {
-                parcelLayer.overrideStyle(feature, {strokeColor: "#FF0000", strokeWeight: 2});
-            } else {
-                parcelLayer.revertStyle(feature);
-            }
-        });
-        var AIN = thisEvent.feature.getProperty("AIN");
-        var SitusAddress = thisEvent.feature.getProperty("Situs Address");
-        var YearBuilt = thisEvent.feature.getProperty("Year Built");
-        var BuildingSquareFootage = thisEvent.feature.getProperty("Building Square Footage");
-        var BuildingHeight = thisEvent.feature.getProperty("Building Height");
-        var LotSquareFootage = thisEvent.feature.getProperty("Lot Square Footage");
-        document.getElementById("AIN_value").innerText = AIN;
-        document.getElementById("SitusAddress_value").innerText = SitusAddress;
-        document.getElementById("YearBuilt_value").innerText = YearBuilt;
-        document.getElementById("BuildingSquareFootage_value").innerText = BuildingSquareFootage;
-        document.getElementById("BuildingHeight_value").innerText = BuildingHeight;
-        document.getElementById("LotSquareFootage_value").innerText = LotSquareFootage;
-        document.getElementById("Assumption_title").innerText = assumption_title;
-        document.getElementById("Assumption_description").innerText = assumption_description;
-        document.getElementById("Assumption_sources").innerText = assumption_sources;
-        drawPieChart();
     });
     parcelLayer.loadGeoJson(url);
     return parcelLayer;

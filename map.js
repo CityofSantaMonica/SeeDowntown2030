@@ -36,7 +36,7 @@ google.charts.setOnLoadCallback(function () {
             var group = data[i];
             var potential = group.potential;
             var area = group.area;
-            var groupCheckbox = createGroupCheckbox("layerGroups", potential, area);
+            var groupCheckbox = createGroupCheckbox("layerGroups", i, potential, area);
             var groupCheckboxList = groupCheckbox.parentElement.nextSibling;
             for (var j = 0; j < group.layers.length; j++) {
                 var layer = group.layers[j];
@@ -45,7 +45,7 @@ google.charts.setOnLoadCallback(function () {
                 var description = layer.description;
                 var source = layer.source;
                 var color = layer.color;
-                potentialLayers.push(loadPotentialLayer(path, color, 0.75, "#FFFFFF", 0.1, groupCheckbox, groupCheckboxList, title, description, source, true));
+                potentialLayers.push(loadPotentialLayer(path, color, 0.75, "#FFFFFF", 0.1, groupCheckbox, groupCheckboxList, j, title, description, source, true));
             }
             if (group.potential === "SITES CONSIDERED TO HAVE POTENTIAL FOR CHANGE") {
                 loadPotentialLayer("https://cityofsantamonica.github.io/SeeDowntown2030/HistoricBuildings.geojson", "#FFFFFF", 0, "#FF0000", 1, groupCheckbox, groupCheckboxList, "Historic Buildings", "", "", false);
@@ -55,17 +55,22 @@ google.charts.setOnLoadCallback(function () {
     });
 });
 
-function createGroupCheckbox(layerContainerId, potential, area) {
+function createGroupCheckbox(layerContainerId, checkboxId, potential, area) {
     var layerContainer = document.getElementById(layerContainerId);
     var header = document.createElement("h3");
+    var headerLabel = document.createElement("label");
     var headerText = document.createTextNode(potential);
     var checkbox = document.createElement("input");
     var list = document.createElement("ul");
-    header.appendChild(headerText);
     layerContainer.appendChild(header);
+    checkbox.id = "cb_" + checkboxId;
     checkbox.type = "checkbox";
     checkbox.subCheckbox = [];
     checkbox.checked = true;
+    headerLabel.appendChild(headerText);
+    headerLabel.htmlFor = checkbox.id;
+    headerLabel.style.cursor = "pointer";
+    header.appendChild(headerLabel);
     header.insertBefore(checkbox, header.firstChild);
     checkbox.addEventListener("change", function (thisEvent) {
         for (var index = 0; index < thisEvent.target.subCheckbox.length; index++) {
@@ -86,7 +91,7 @@ function createGroupCheckbox(layerContainerId, potential, area) {
     return checkbox;
 }
 
-function loadPotentialLayer(url, fillColor, fillOpacity, strokeColor, strokeOpacity, groupCheckbox, groupList, title, description, sources, isParcel) {
+function loadPotentialLayer(url, fillColor, fillOpacity, strokeColor, strokeOpacity, groupCheckbox, groupList, checkboxId, title, description, sources, isParcel) {
     var potentialLayer = new google.maps.Data({map: map, style: {clickable: false, fillColor: fillColor, fillOpacity: fillOpacity, strokeColor: strokeColor, strokeOpacity: strokeOpacity, strokeWeight: 1, zIndex: isParcel ? -1 : 0}, title: title, color: fillColor, expanded: false});
     var li = document.createElement("li");
     var checkbox = document.createElement("input");
@@ -99,6 +104,7 @@ function loadPotentialLayer(url, fillColor, fillOpacity, strokeColor, strokeOpac
     potentialLayer.assumption_sources = sources;
     groupList.style.webkitPaddingStart = "0";
     groupList.appendChild(li);
+    checkbox.id = groupCheckbox.id + "_" + checkboxId;
     checkbox.type = "checkbox";
     checkbox.checked = true;
     potentialLayer.checkbox = checkbox;
@@ -164,8 +170,6 @@ function loadParcelLayer(url, strokeColor) {
         var assumption_description = "";
         var assumption_sources = "";
         var latLng = thisEvent.latLng;
-        var lat = latLng.lat();
-        var lng = latLng.lng();
         for (var i = 0; i < potentialLayers.length; i++) {
             var potentialLayer = potentialLayers[i];
             if (potentialLayer.checkbox.checked) {

@@ -74,8 +74,8 @@
       },
       {
         "path": "https://cityofsantamonica.github.io/SeeDowntown2030/LimitedPotential/LC.geojson",
-        "title": "Commercial Office Properties",
-        "description": "Commercial office is increasingly scarce in Santa Monica. The assumption is that most existing commercial office is not likely to change.",
+        "title": "Commercial Properties",
+        "description": "Commercial office is increasingly scarce in Santa Monica. The assumption is that most existing commercial office and long-standing retail spaces are not likely to change.",
         "source": "Field Study, Assessor’s Office",
         "color": "#aaff00"
       },

@@ -31,7 +31,14 @@ google.charts.load('current', {'packages': ['corechart']});
 
 google.charts.setOnLoadCallback(function () {
     map = new google.maps.Map(document.getElementById("map"), mapConfig);
-    $.getJSON("https://cityofsantamonica.github.io/SeeDowntown2030/layers.json", function (data) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function (result) {
+        var data;
+        if (result.target.responseType === 'json') {
+            data = result.target.response;
+        } else {
+            data = JSON.parse(result.target.responseText);
+        }
         for (var i = 0; i < data.length; i++) {
             var group = data[i];
             var potential = group.potential;
@@ -52,7 +59,9 @@ google.charts.setOnLoadCallback(function () {
             }
         }
         loadParcelLayer("https://cityofsantamonica.github.io/SeeDowntown2030/Downtown.geojson", "#FFFFFF");
-    });
+    };
+    xhr.open("GET", "https://cityofsantamonica.github.io/SeeDowntown2030/layers.json", true);
+    xhr.send();
 });
 
 function createGroupCheckbox(layerContainerId, potential, area) {

@@ -48,7 +48,7 @@ google.charts.setOnLoadCallback(function () {
                 potentialLayers.push(loadPotentialLayer(path, color, 0.75, "#FFFFFF", 0.1, groupCheckbox, groupCheckboxList, j, title, description, source, true));
             }
             if (group.potential === "SITES CONSIDERED TO HAVE POTENTIAL FOR CHANGE") {
-                loadPotentialLayer("https://cityofsantamonica.github.io/SeeDowntown2030/HistoricBuildings.geojson", "#FFFFFF", 0, "#FF0000", 1, groupCheckbox, groupCheckboxList, "Historic Buildings", "", "", false);
+                loadPotentialLayer("https://cityofsantamonica.github.io/SeeDowntown2030/HistoricBuildings.geojson", "#FFFFFF", 0, "#FF0000", 1, groupCheckbox, groupCheckboxList, j + "_HB", "Historic Buildings", "", "", false);
             }
         }
         loadParcelLayer("https://cityofsantamonica.github.io/SeeDowntown2030/Downtown.geojson", "#FFFFFF");
